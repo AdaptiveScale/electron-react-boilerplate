@@ -1,6 +1,7 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 import { BrowserWindow, app } from 'electron';
 import path from 'path';
+import { DATA_DIR } from '../utils/setupHelpers';
 
 export default class CliService {
   private cliPath: string;
@@ -10,7 +11,10 @@ export default class CliService {
   constructor() {
     this.cliPath = app.isPackaged
       ? path.join(process.resourcesPath, 'bin', 'fake-installer')
-      : path.join(__dirname, '../../bin/fake-installer');
+      : path.join(
+          __dirname,
+          '../../bin/rosetta/rosetta-2.7.0-mac_aarch64/bin/rosetta',
+        );
   }
 
   setPath(value: string) {
@@ -28,6 +32,11 @@ export default class CliService {
   }
 
   runCommand(mainWindow: BrowserWindow, args: string[]) {
+    if (args.length !== 2) {
+      throw new Error('Invalid number of arguments');
+    }
+    args[1] = path.join(DATA_DIR, args[1]);
+
     return new Promise<void>((resolve, reject) => {
       if (this.process) {
         reject(new Error('A command is already running. Please wait.'));

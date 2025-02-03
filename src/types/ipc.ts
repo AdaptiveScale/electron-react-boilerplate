@@ -1,4 +1,11 @@
 export type TestChannels = 'test:create' | 'test:getAll';
+export type ProjectChannels =
+  | 'project:list'
+  | 'project:add'
+  | 'project:update'
+  | 'project:delete'
+  | 'project:getPath';
+
 export type CliChannels =
   | 'cli:run'
   | 'cli:input'
@@ -9,4 +16,4 @@ export type CliChannels =
   | 'cli:setPath'
   | 'cli:status';
 
-export type Channels = TestChannels | CliChannels;
+export type Channels = TestChannels | CliChannels | ProjectChannels;

@@ -17,7 +17,7 @@ import {
   installExtensions,
   AppUpdater,
   loadEnvironment,
-} from './utiles/setupHelpers';
+} from './utils/setupHelpers';
 
 const isProd = process.env.NODE_ENV === 'production';
 const isDebug =

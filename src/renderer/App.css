@@ -7,16 +7,14 @@ body {
   color: white;
   height: 100vh;
   background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
+    200deg,
+    rgb(186, 216, 250) 2%,
+    rgba(250,238,176,1) 50%,
+    rgb(186, 216, 250) 98%,
   );
   font-family: sans-serif;
-  overflow-y: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 button {
@@ -82,11 +80,4 @@ a {
 a:hover {
   opacity: 1;
   text-decoration: none;
-}
-
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
 }

@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  height: 100vh;
+  overflow-y: hidden;
+
+  .content {
+    width: 100%;
+
+    .outlet {
+      max-height: calc(100vh - 70px);
+      padding: 0 10px;
+    }
+  }
+}

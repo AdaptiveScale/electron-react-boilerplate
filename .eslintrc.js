@@ -16,6 +16,8 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'react/function-component-definition': 'off',
+    'react/require-default-props': 'off',
+    'import/no-cycle': 'off',
   },
   parserOptions: {
     ecmaVersion: 2022,
