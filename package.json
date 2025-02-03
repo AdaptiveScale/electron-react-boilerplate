@@ -233,8 +233,8 @@
     "extraResources": [
       "./assets/**",
       {
-        "from": "./bin/fake-installer",
-        "to": "bin/fake-installer"
+        "from": "./bin/rosetta",
+        "to": "bin/rosetta"
       }
     ],
     "publish": {

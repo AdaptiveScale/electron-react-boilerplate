@@ -10,7 +10,14 @@ export default class CliService {
 
   constructor() {
     this.cliPath = app.isPackaged
-      ? path.join(process.resourcesPath, 'bin', 'fake-installer')
+      ? path.join(
+          process.resourcesPath,
+          'bin',
+          'rosetta',
+          'rosetta-2.7.0-mac_aarch64',
+          'bin',
+          'rosetta',
+        )
       : path.join(
           __dirname,
           '../../bin/rosetta/rosetta-2.7.0-mac_aarch64/bin/rosetta',
