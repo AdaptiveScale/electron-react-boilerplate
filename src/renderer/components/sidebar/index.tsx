@@ -26,12 +26,22 @@ export const Sidebar: React.FC = () => {
           {project.name[0].toUpperCase()}
         </button>
       ))}
-      <Link to="/add-project" className={styles.projectIcon}>
+      <Link
+        to="/add-project"
+        className={styles.projectIcon}
+        style={{ marginBottom: 100 }}
+      >
         <img src={icons.add} alt="add" width={36} />
       </Link>
       <Link
         to="/settings"
-        className={`${styles.projectIcon} ${styles.settingsIcon}`}
+        className={styles.projectIcon}
+        style={{
+          position: 'fixed',
+          bottom: 10,
+          color: '#000',
+          background: '#fff',
+        }}
       >
         <img src={icons.settings} alt="settings" width={36} />
       </Link>

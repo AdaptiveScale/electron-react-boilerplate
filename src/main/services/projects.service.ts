@@ -2,6 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import { DATA_DIR, DB_FILE } from '../utils/setupHelpers';
 import { Project } from '../../types/backend';
+import {
+  getDirectoryStructure,
+  readFileContent,
+  saveFileContent,
+} from '../utils/fileHelper';
 
 export default class ProjectsService {
   static loadProjects() {
@@ -59,5 +64,17 @@ export default class ProjectsService {
 
   static getProjectPath(name: string) {
     return path.join(DATA_DIR, name);
+  }
+
+  static getDirectoryStructure(dirPath: string) {
+    return getDirectoryStructure(dirPath);
+  }
+
+  static readFileContent(filePath: string) {
+    return readFileContent(filePath);
+  }
+
+  static saveFileContent(filePath: string, content: string) {
+    return saveFileContent(filePath, content);
   }
 }

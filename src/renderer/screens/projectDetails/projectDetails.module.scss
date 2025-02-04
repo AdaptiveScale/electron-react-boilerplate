@@ -1,3 +1,16 @@
 .container {
+  .content {
+    display: flex;
+    background: #1e1e2f;
+    justify-content: space-between;
+    min-height: 300px;
 
+    .treeViewContainer {
+      height: 100%;
+    }
+
+    .fileContentViewer {
+      text-align: center;
+    }
+  }
 }

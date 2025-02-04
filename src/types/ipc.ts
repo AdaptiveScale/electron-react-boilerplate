@@ -4,7 +4,10 @@ export type ProjectChannels =
   | 'project:add'
   | 'project:update'
   | 'project:delete'
-  | 'project:getPath';
+  | 'project:getPath'
+  | 'project:getDirectory'
+  | 'project:readFile'
+  | 'project:updateFile';
 
 export type CliChannels =
   | 'cli:run'

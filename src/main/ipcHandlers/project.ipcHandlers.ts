@@ -30,6 +30,24 @@ const registerProjectHandlers = () => {
   ipcMain.handle('project:getPath', async (_event, body: { name: string }) => {
     return ProjectsService.getProjectPath(body.name);
   });
+
+  ipcMain.handle(
+    'project:getDirectory',
+    async (_event, body: { path: string }) => {
+      return ProjectsService.getDirectoryStructure(body.path);
+    },
+  );
+
+  ipcMain.handle('project:readFile', async (_event, body: { path: string }) => {
+    return ProjectsService.readFileContent(body.path);
+  });
+
+  ipcMain.handle(
+    'project:updateFile',
+    async (_event, body: { path: string; content: string }) => {
+      return ProjectsService.saveFileContent(body.path, body.content);
+    },
+  );
 };
 
 export default registerProjectHandlers;

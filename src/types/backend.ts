@@ -5,3 +5,10 @@ export type Project = {
   createdAt: string;
   isCompleted: boolean;
 };
+
+export type FileNode = {
+  name: string;
+  path: string;
+  type: 'file' | 'folder';
+  children?: FileNode[];
+};
