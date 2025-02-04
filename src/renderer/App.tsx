@@ -6,13 +6,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import './App.css';
-import {
-  AddProject,
-  CliExecutor,
-  ProjectDetails,
-  Settings,
-  SetupProject,
-} from './screens';
+import { AddProject, ProjectDetails, Settings, SetupProject } from './screens';
 import { AppLayout } from './layouts';
 import { AppProvider } from './context';
 
@@ -21,7 +15,6 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/" element={<AppLayout />}>
-          <Route path="" element={<CliExecutor />} />
           <Route path="/add-project" element={<AddProject />} />
           <Route path="/setup-project/:id" element={<SetupProject />} />
           <Route path="/settings" element={<Settings />} />

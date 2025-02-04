@@ -2,7 +2,6 @@ import React from 'react';
 import AceEditor from 'react-ace';
 import styles from './editor.module.scss';
 
-// Import required modes and themes
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/mode-json';
 import 'ace-builds/src-noconflict/theme-monokai';
@@ -37,7 +36,7 @@ export const Editor: React.FC<Props> = ({
         name="editor"
         editorProps={{ $blockScrolling: true }}
         width="100%"
-        height="300px"
+        height="500px"
       />
       <button type="button" onClick={handleSave}>
         Save

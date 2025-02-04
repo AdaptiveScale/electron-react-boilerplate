@@ -9,6 +9,7 @@
     .outlet {
       max-height: calc(100vh - 70px);
       padding: 0 10px;
+      overflow-y: auto;
     }
   }
 }
