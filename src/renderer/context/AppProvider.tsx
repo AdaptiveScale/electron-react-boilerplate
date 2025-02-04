@@ -2,7 +2,7 @@ import React from 'react';
 import { AppContextType } from '../../types/frontend';
 import { Splash } from '../components';
 import { useIpcPromise } from '../hooks';
-import { Project } from '../../types/backend';
+import { Project, SettingsType } from '../../types/backend';
 
 type Props = {
   children: React.ReactNode;
@@ -16,6 +16,8 @@ export const AppContext = React.createContext<AppContextType>({
   onUpdateProject: () => {},
   onDeleteProject: () => {},
   onSelectProject: () => {},
+  settings: {} as SettingsType,
+  onSettingsUpdate: () => {},
 });
 
 const AppProvider: React.FC<Props> = ({ children }) => {
@@ -26,13 +28,29 @@ const AppProvider: React.FC<Props> = ({ children }) => {
   const invokeDeleteProject = useIpcPromise<{ id: string }, boolean>(
     'project:delete',
   );
+  const invokeGetSettings = useIpcPromise<undefined, SettingsType>(
+    'settings:load',
+  );
+  const invokeSaveSettings = useIpcPromise<SettingsType, void>('settings:save');
 
   const [loadingStage, setLoadingStage] =
-    React.useState<string>('Loading projects!');
+    React.useState<string>('Loading settings!');
 
+  const [settings, setSettings] = React.useState<SettingsType>(
+    {} as SettingsType,
+  );
   const [projects, setProjects] = React.useState<Project[]>([]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedProject, setSelectedProject] = React.useState<Project>();
+
+  const handleLoadSettings = React.useCallback(async () => {
+    const data = await invokeGetSettings();
+    setSettings(data);
+  }, []);
+
+  const handleSaveSettings = React.useCallback(async (body: SettingsType) => {
+    await invokeSaveSettings(body);
+  }, []);
 
   const handleLoadProjects = React.useCallback(async () => {
     const data = await invokeGetProjects();
@@ -70,13 +88,14 @@ const AppProvider: React.FC<Props> = ({ children }) => {
 
   const fetchProjects = async (): Promise<void> => {
     await new Promise((resolve) => {
-      setTimeout(() => resolve('Data loaded'), 500);
+      setTimeout(() => resolve('Loading settings'), 500);
+    });
+    setLoadingStage('Loading projects!');
+    await handleLoadSettings();
+    await new Promise((resolve) => {
+      setTimeout(() => resolve('Loading data'), 1000);
     });
     setLoadingStage('Getting everything ready!');
-    await new Promise((resolve) => {
-      setTimeout(() => resolve('Data loaded'), 1000);
-    });
-    setLoadingStage('Opening project!');
     await handleLoadProjects();
     await new Promise((resolve) => {
       setTimeout(() => resolve('Data loaded'), 1000);
@@ -91,13 +110,15 @@ const AppProvider: React.FC<Props> = ({ children }) => {
   const value: AppContextType = React.useMemo(() => {
     return {
       projects,
+      settings,
       selectedProject,
       onSaveProject: handleSaveProject,
       onUpdateProject: handleUpdateProject,
       onDeleteProject: handleDeleteProject,
       onSelectProject: handleSelectProject,
+      onSettingsUpdate: handleSaveSettings,
     };
-  }, [isInitializing, projects, selectedProject]);
+  }, [isInitializing, projects, selectedProject, settings]);
 
   if (isInitializing) {
     return <Splash loaderMessage={loadingStage} />;

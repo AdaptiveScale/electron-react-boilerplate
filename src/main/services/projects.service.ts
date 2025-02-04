@@ -1,35 +1,22 @@
-import fs from 'fs';
 import path from 'path';
-import { DATA_DIR, DB_FILE } from '../utils/setupHelpers';
 import { Project } from '../../types/backend';
 import {
+  deleteDirectory,
   getDirectoryStructure,
+  loadDatabaseFile,
   readFileContent,
   saveFileContent,
+  updateDatabase,
 } from '../utils/fileHelper';
+import SettingsService from './settings.service';
 
 export default class ProjectsService {
   static loadProjects() {
-    try {
-      const data = fs.readFileSync(DB_FILE, 'utf8');
-      const projects: Project[] = JSON.parse(data).projects || [];
-
-      // const validProjects = projects.filter((project) => {
-      //   return fs.existsSync(project.path);
-      // });
-      //
-      // if (validProjects.length !== projects.length) {
-      //   this.saveProjects(validProjects);
-      // }
-
-      return projects;
-    } catch (error) {
-      return [];
-    }
+    return loadDatabaseFile().projects;
   }
 
   static saveProjects(projects: Project[]) {
-    fs.writeFileSync(DB_FILE, JSON.stringify({ projects }, null, 2));
+    updateDatabase<'projects'>('projects', projects);
   }
 
   static addProject(name: string) {
@@ -56,14 +43,20 @@ export default class ProjectsService {
 
   static deleteProject(id: string) {
     const projects = this.loadProjects();
-    const filteredProjects = projects.filter((p) => p.id !== id);
-    if (projects.length === filteredProjects.length) return false;
-    this.saveProjects(filteredProjects);
-    return true;
+    const projectToDelete = projects.find((p) => p.id === id);
+    if (projectToDelete) {
+      if (projectToDelete.path) {
+        deleteDirectory(projectToDelete.path);
+      }
+      const filteredProjects = projects.filter((p) => p.id !== id);
+      this.saveProjects(filteredProjects);
+      return true;
+    }
+    return false;
   }
 
   static getProjectPath(name: string) {
-    return path.join(DATA_DIR, name);
+    return path.join(SettingsService.loadSettings().projectsDirectory, name);
   }
 
   static getDirectoryStructure(dirPath: string) {

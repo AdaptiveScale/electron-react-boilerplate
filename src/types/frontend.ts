@@ -1,4 +1,4 @@
-import { Project } from './backend';
+import { Project, SettingsType } from './backend';
 
 export type AppContextType = {
   projects: Project[];
@@ -7,4 +7,6 @@ export type AppContextType = {
   onSaveProject: (name: string) => Promise<Project | undefined>;
   onUpdateProject: (project: Project) => void;
   onDeleteProject: (project: Project) => void;
+  settings: SettingsType;
+  onSettingsUpdate: (settings: SettingsType) => void;
 };

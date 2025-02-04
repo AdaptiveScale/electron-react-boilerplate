@@ -6,6 +6,19 @@ export type Project = {
   isCompleted: boolean;
 };
 
+export type SettingsType = {
+  rosettaPath: string;
+  rosettaVersion: string;
+  projectsDirectory: string;
+};
+
+export type FileDialogProperties = 'openFile' | 'openDirectory';
+
+export type DataBase = {
+  projects: Project[];
+  settings: SettingsType;
+};
+
 export type FileNode = {
   name: string;
   path: string;

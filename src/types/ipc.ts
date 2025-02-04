@@ -1,4 +1,10 @@
 export type TestChannels = 'test:create' | 'test:getAll';
+
+export type SettingsChannels =
+  | 'settings:load'
+  | 'settings:save'
+  | 'settings:dialog';
+
 export type ProjectChannels =
   | 'project:list'
   | 'project:add'
@@ -19,4 +25,8 @@ export type CliChannels =
   | 'cli:setPath'
   | 'cli:status';
 
-export type Channels = TestChannels | CliChannels | ProjectChannels;
+export type Channels =
+  | TestChannels
+  | CliChannels
+  | ProjectChannels
+  | SettingsChannels;

@@ -18,6 +18,7 @@ module.exports = {
     'react/function-component-definition': 'off',
     'react/require-default-props': 'off',
     'import/no-cycle': 'off',
+    'jsx-a11y/label-has-associated-control': 'off',
   },
   parserOptions: {
     ecmaVersion: 2022,

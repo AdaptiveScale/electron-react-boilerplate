@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './projectDetails.module.scss';
 import { useAppContext, useIpcPromise } from '../../hooks';
 import { FileNode } from '../../../types/backend';
-import { TreeViewer, Editor } from '../../components';
-
-type Params = {
-  id: string;
-};
+import { Editor, TreeViewer } from '../../components';
 
 const ProjectDetails: React.FC = () => {
+  const { projects, onDeleteProject } = useAppContext();
   const navigate = useNavigate();
-  const { id } = useParams<Params>();
-  const { projects } = useAppContext();
+  const { id } = useParams<{ id: string }>();
+  // const { output, error, isRunning, runCommand, sendInput, stopCommand } =
+  //   useCli();
   const invokeGetDirectories = useIpcPromise<{ path: string }, FileNode>(
     'project:getDirectory',
   );
@@ -33,6 +31,27 @@ const ProjectDetails: React.FC = () => {
     [id, projects],
   );
 
+  const fetchDirectories = async () => {
+    if (project && project.path) {
+      const res = await invokeGetDirectories({ path: project.path });
+      setDirectories(res);
+    }
+  };
+
+  const handleDBTAction = async () => {
+    fetchDirectories();
+  };
+
+  const handleTranspileAction = async () => {
+    fetchDirectories();
+  };
+
+  useEffect(() => {
+    if (project && project.path) {
+      fetchDirectories();
+    }
+  }, [project]);
+
   if (!project || !project.path) {
     navigate('/');
     return null;
@@ -40,42 +59,63 @@ const ProjectDetails: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Project details {project.name}</h1>
-      <button
-        type="button"
-        onClick={async () => {
-          const res = await invokeGetDirectories({ path: project.path! });
-          setDirectories(res);
-        }}
-      >
-        List Dir
-      </button>
+      <div className={styles.header}>
+        <h2>Project Details: {project.name}</h2>
+        <div className={styles.actions}>
+          <button
+            type="button"
+            onClick={() => onDeleteProject(project)}
+            style={{ background: 'red' }}
+          >
+            Delete
+          </button>
+          <button type="button" onClick={handleDBTAction}>
+            DBT
+          </button>
+          <button type="button" onClick={handleTranspileAction}>
+            Transpile
+          </button>
+        </div>
+      </div>
       <div className={styles.content}>
-        {directories && (
-          <div className={styles.treeViewContainer}>
+        <div className={styles.sidebar}>
+          {directories && (
             <TreeViewer
               node={directories}
               onFileSelect={async (filePath) => {
-                setSelectedFilePath(filePath);
                 const content = await invokeGetFileContent({ path: filePath });
+                setSelectedFilePath(filePath);
                 setFileContent(content);
               }}
             />
-          </div>
-        )}
-        {fileContent && (
-          <Editor
-            filePath={selectedFilePath}
-            content={fileContent}
-            setContent={setFileContent}
-            saveFile={async (filePath, content) => {
-              await invokeSaveFileContent({
-                path: filePath,
-                content,
-              });
-            }}
-          />
-        )}
+          )}
+          <button type="button" onClick={fetchDirectories}>
+            Refresh Directories
+          </button>
+        </div>
+        <div className={styles.main}>
+          {selectedFilePath && (
+            <div>
+              <Editor
+                filePath={selectedFilePath}
+                content={fileContent ?? ''}
+                setContent={setFileContent}
+              />
+              <button
+                type="button"
+                onClick={async () => {
+                  await invokeSaveFileContent({
+                    path: selectedFilePath,
+                    content: fileContent ?? '',
+                  });
+                  fetchDirectories();
+                }}
+              >
+                Save
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

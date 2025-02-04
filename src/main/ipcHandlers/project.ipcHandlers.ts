@@ -1,16 +1,8 @@
 import { ipcMain } from 'electron';
-import { initializeDataStorage } from '../utils/setupHelpers';
 import { ProjectsService } from '../services';
 import { Project } from '../../types/backend';
 
 const registerProjectHandlers = () => {
-  initializeDataStorage();
-  //
-  // ipcMain.removeHandler('project:list');
-  // ipcMain.removeHandler('project:update');
-  // ipcMain.removeHandler('project:delete');
-  // ipcMain.removeHandler('project:add');
-
   ipcMain.handle('project:list', async () => {
     return ProjectsService.loadProjects();
   });

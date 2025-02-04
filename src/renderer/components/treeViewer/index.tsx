@@ -32,7 +32,7 @@ export const TreeViewer: React.FC<Props> = ({ node, onFileSelect }) => {
             📂
           </span>
         ) : (
-          <span>📄</span>
+          <span style={{ marginRight: 6 }}>📄</span>
         )}
         {node.name}
       </div>

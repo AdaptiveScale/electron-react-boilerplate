@@ -1,7 +1,7 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow } from 'electron';
 import path from 'path';
-import { DATA_DIR } from '../utils/setupHelpers';
+import SettingsService from './settings.service';
 
 export default class CliService {
   private cliPath: string;
@@ -9,19 +9,7 @@ export default class CliService {
   private process: ChildProcessWithoutNullStreams | null = null;
 
   constructor() {
-    this.cliPath = app.isPackaged
-      ? path.join(
-          process.resourcesPath,
-          'bin',
-          'rosetta',
-          'rosetta-2.7.0-mac_aarch64',
-          'bin',
-          'rosetta',
-        )
-      : path.join(
-          __dirname,
-          '../../bin/rosetta/rosetta-2.7.0-mac_aarch64/bin/rosetta',
-        );
+    this.cliPath = SettingsService.loadSettings().rosettaPath;
   }
 
   setPath(value: string) {
@@ -42,7 +30,10 @@ export default class CliService {
     if (args.length !== 2) {
       throw new Error('Invalid number of arguments');
     }
-    args[1] = path.join(DATA_DIR, args[1]);
+    args[1] = path.join(
+      SettingsService.loadSettings().projectsDirectory,
+      args[1],
+    );
 
     return new Promise<void>((resolve, reject) => {
       if (this.process) {
