@@ -7,16 +7,14 @@ body {
   color: white;
   height: 100vh;
   background: linear-gradient(
-    200.96deg,
-    #fedc2a -29.09%,
-    #dd5789 51.77%,
-    #7a2c9e 129.35%
+    200deg,
+    rgb(186, 216, 250) 2%,
+    rgba(250,238,176,1) 50%,
+    rgb(186, 216, 250) 98%,
   );
   font-family: sans-serif;
-  overflow-y: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 button {
@@ -26,14 +24,17 @@ button {
   border: none;
   appearance: none;
   font-size: 1.3rem;
-  box-shadow: 0px 8px 28px -6px rgba(24, 39, 75, 0.12),
-    0px 18px 88px -4px rgba(24, 39, 75, 0.14);
+  box-shadow: 0 8px 28px -6px rgba(24, 39, 75, 0.12),
+    0 18px 88px -4px rgba(24, 39, 75, 0.14);
   transition: all ease-in 0.1s;
-  cursor: pointer;
   opacity: 0.9;
+
+  &:enabled {
+    cursor: pointer;
+  }
 }
 
-button:hover {
+button:enabled:hover {
   transform: scale(1.05);
   opacity: 1;
 }
@@ -54,9 +55,36 @@ a:hover {
   text-decoration: none;
 }
 
-.Hello {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px 0;
+input,
+select {
+  background-color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 1px solid rgba(24, 39, 75, 0.2);
+  font-size: 1rem;
+  box-shadow: 0 8px 28px -6px rgba(24, 39, 75, 0.12),
+    0 18px 88px -4px rgba(24, 39, 75, 0.14);
+  transition: all ease-in 0.1s;
+  opacity: 0.9;
+}
+
+input:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+input {
+  max-width: calc(100% - 40px);
+}
+
+select {
+  padding: 13px 10px 13px 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 5'%3E%3Cpath fill='%23000' d='M0 0L5 5L10 0H0Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
