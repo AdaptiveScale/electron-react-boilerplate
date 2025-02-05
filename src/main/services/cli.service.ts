@@ -1,6 +1,5 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 import { BrowserWindow } from 'electron';
-import path from 'path';
 import SettingsService from './settings.service';
 
 export default class CliService {
@@ -26,22 +25,14 @@ export default class CliService {
     };
   }
 
-  runCommand(mainWindow: BrowserWindow, args: string[]) {
-    if (args.length !== 2) {
-      throw new Error('Invalid number of arguments');
-    }
-    args[1] = path.join(
-      SettingsService.loadSettings().projectsDirectory,
-      args[1],
-    );
-
+  runCommand(mainWindow: BrowserWindow, args: string) {
     return new Promise<void>((resolve, reject) => {
       if (this.process) {
         reject(new Error('A command is already running. Please wait.'));
         return;
       }
 
-      this.process = spawn(this.cliPath, args, { shell: true });
+      this.process = spawn(args, { shell: true });
 
       this.process.stdout.on('data', (data) => {
         mainWindow.webContents.send('cli:output', '', data.toString());

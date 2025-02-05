@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import './App.css';
 import { AddProject, ProjectDetails, Settings, SetupProject } from './screens';
 import { AppLayout } from './layouts';
@@ -30,6 +31,17 @@ const AppWithProjectProvider: React.FC = () => {
   return (
     <AppProvider>
       <App />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        theme="dark"
+      />
     </AppProvider>
   );
 };

@@ -1,0 +1,47 @@
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1040;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(15px);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 1041;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 0 20px 10px 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+      color: #000;
+      border-bottom: 1px solid #e0e0e0;
+
+      h2 {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      button {
+        font-size: 16px;
+        margin-left: auto;
+        height: 32px;
+        width: 32px;
+        padding: 0;
+        box-shadow: none;
+      }
+    }
+}

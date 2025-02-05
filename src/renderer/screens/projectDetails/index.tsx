@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './projectDetails.module.scss';
 import { useAppContext, useIpcPromise } from '../../hooks';
-import { FileNode } from '../../../types/backend';
-import { Editor, TreeViewer } from '../../components';
+import { Connection, FileNode } from '../../../types/backend';
+import {
+  ExtractModal,
+  Editor,
+  TreeViewer,
+  AddConnectionModal,
+} from '../../components';
+import { extractConnections } from '../../helpers';
 
 const ProjectDetails: React.FC = () => {
   const { projects, onDeleteProject } = useAppContext();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  // const { output, error, isRunning, runCommand, sendInput, stopCommand } =
-  //   useCli();
   const invokeGetDirectories = useIpcPromise<{ path: string }, FileNode>(
     'project:getDirectory',
   );
@@ -25,6 +29,11 @@ const ProjectDetails: React.FC = () => {
   const [directories, setDirectories] = React.useState<FileNode>();
   const [selectedFilePath, setSelectedFilePath] = React.useState<string>();
   const [fileContent, setFileContent] = React.useState<string>();
+  const [connections, setConnections] = React.useState<Connection[]>([]);
+  const [mainConf, setMainConf] = React.useState<string>();
+  const [isExtractModalOpen, setIsExtractModalOpen] = React.useState(false);
+  const [isAddConnectionModalOpen, setIsAddConnectionModalOpen] =
+    React.useState(false);
 
   const project = React.useMemo(
     () => projects.find((_project) => _project.id === id),
@@ -35,22 +44,25 @@ const ProjectDetails: React.FC = () => {
     if (project && project.path) {
       const res = await invokeGetDirectories({ path: project.path });
       setDirectories(res);
+      const mainConfRes = await invokeGetFileContent({
+        path: `${project.path}/main.conf`,
+      });
+      setMainConf(mainConfRes);
+      setConnections(extractConnections(mainConfRes));
     }
   };
 
-  const handleDBTAction = async () => {
-    fetchDirectories();
-  };
-
-  const handleTranspileAction = async () => {
-    fetchDirectories();
-  };
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (project && project.path) {
       fetchDirectories();
     }
   }, [project]);
+
+  React.useEffect(() => {
+    if (id) {
+      setSelectedFilePath(undefined);
+    }
+  }, [id]);
 
   if (!project || !project.path) {
     navigate('/');
@@ -69,11 +81,14 @@ const ProjectDetails: React.FC = () => {
           >
             Delete
           </button>
-          <button type="button" onClick={handleDBTAction}>
-            DBT
+          <button onClick={() => setIsExtractModalOpen(true)} type="button">
+            Extract
           </button>
-          <button type="button" onClick={handleTranspileAction}>
-            Transpile
+          <button
+            onClick={() => setIsAddConnectionModalOpen(true)}
+            type="button"
+          >
+            Add Connection
           </button>
         </div>
       </div>
@@ -117,6 +132,25 @@ const ProjectDetails: React.FC = () => {
           )}
         </div>
       </div>
+      <ExtractModal
+        isOpen={isExtractModalOpen}
+        onClose={() => setIsExtractModalOpen(false)}
+        connections={connections}
+        projectPath={project.path}
+        successCallback={async () => {
+          await fetchDirectories();
+          setIsExtractModalOpen(false);
+        }}
+      />
+      {mainConf && (
+        <AddConnectionModal
+          isOpen={isAddConnectionModalOpen}
+          onClose={() => setIsAddConnectionModalOpen(false)}
+          onSuccessCallback={() => {}}
+          project={project}
+          yamlContent={mainConf}
+        />
+      )}
     </div>
   );
 };

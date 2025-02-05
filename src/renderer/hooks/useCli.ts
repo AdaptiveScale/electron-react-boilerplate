@@ -6,9 +6,10 @@ const useCli = () => {
   const [output, setOutput] = React.useState<string[]>([]);
   const [error, setError] = React.useState<string | null>(null);
   const [isRunning, setIsRunning] = React.useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = React.useState<boolean | null>(null);
 
   const invokePathUpdate = useIpcPromise<string>('cli:setPath');
-  const invokeCliRun = useIpcPromise<string[]>('cli:run');
+  const invokeCliRun = useIpcPromise<string>('cli:run');
   const getCliStatus = useIpcPromise<undefined, { path: string }>('cli:status');
 
   const getStatus = async () => {
@@ -26,10 +27,12 @@ const useCli = () => {
     const handleError = (_event: any, arg: unknown) => {
       const data = arg as string;
       setError(data);
+      setIsSuccess(false);
     };
 
     const handleDone = () => {
       setIsRunning(false);
+      setIsSuccess(true);
     };
 
     window.electron.ipcRenderer.on('cli:output', handleOutput);
@@ -47,7 +50,7 @@ const useCli = () => {
     setOutput([]);
     setError(null);
     setIsRunning(true);
-    await invokeCliRun(command.split(' '));
+    await invokeCliRun(command);
   };
 
   const sendInput = (input: string) => {
@@ -73,6 +76,7 @@ const useCli = () => {
     stopCommand,
     path,
     updatePath,
+    isSuccess,
   };
 };
 

@@ -1,0 +1,17 @@
+export const DB_TYPES = [
+  'mysql',
+  'mariadb',
+  'sqlite',
+  'postgres',
+  'mssql',
+  'oracle',
+  'mongodb',
+  'sqljs',
+  'react-native',
+  'expo',
+  'aurora-data-api',
+  'cockroachdb',
+  'aurora',
+  'cockroach',
+  'aurora-serverless',
+] as const;

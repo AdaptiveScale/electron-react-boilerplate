@@ -14,7 +14,7 @@ const registerCliHandlers = (mainWindow: BrowserWindow) => {
   ipcMain.removeAllListeners('cli:error');
   ipcMain.removeAllListeners('cli:done');
 
-  ipcMain.handle('cli:run', async (_event, args: string[]) => {
+  ipcMain.handle('cli:run', async (_event, args: string) => {
     try {
       await cliService.runCommand(mainWindow, args);
       return { success: true };

@@ -23,6 +23,7 @@ type Params = {
 
 const SetupProject: React.FC = () => {
   const navigate = useNavigate();
+  const { settings } = useAppContext();
   const { id } = useParams<Params>();
   const { projects, onDeleteProject, onUpdateProject } = useAppContext();
   const { output, error, isRunning, runCommand, sendInput, stopCommand } =
@@ -118,7 +119,9 @@ const SetupProject: React.FC = () => {
         <button
           type="button"
           onClick={async () => {
-            await runCommand(`init ${project?.name}`);
+            await runCommand(
+              `${settings.rosettaPath} init ${settings?.projectsDirectory}/${project?.name}`,
+            );
             setHasStarted(true);
           }}
         >
